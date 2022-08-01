@@ -1,7 +1,6 @@
 ﻿import { ethers } from "hardhat";
 import { ethers as tsEthers } from "ethers";
 import { expect } from "chai";
-import { getEventData } from "./utils";
 
 let token: tsEthers.Contract;
 let deployer: tsEthers.Signer;
