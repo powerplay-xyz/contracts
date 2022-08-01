@@ -3,11 +3,7 @@ import { ERC20 } from "../../../build/typechain";
 
 export const contractNames = () => ["token"];
 
-export const constructorArguments = () => [
-  process.env.CONSTRUCTOR_TOKEN_NAME,
-  process.env.CONSTRUCTOR_TOKEN_SYMBOL,
-  process.env.CONSTRUCTOR_TOKEN_DECIMALS
-];
+export const constructorArguments = () => [];
 
 export const deploy = async (deployer, setAddresses) => {
   console.log("deploying Token");
