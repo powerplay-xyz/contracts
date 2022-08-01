@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 let token: tsEthers.Contract;
 let deployer: tsEthers.Signer;
-let user: tsEthers.Wallet;
+let user: tsEthers.Signer;
 
 describe("ERC20 Token", () => {
   before(async () => {
@@ -16,13 +16,10 @@ describe("ERC20 Token", () => {
 
     await token.deployed();
 
-    user = new ethers.Wallet(
-      "0xbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef",
-      deployer.provider
-    );
+    user = (await ethers.getSigners())[1];
     // Send ETH to user from signer.
     await deployer.sendTransaction({
-      to: user.address,
+      to: await user.getAddress(),
       value: ethers.utils.parseEther("1000")
     });
   });
@@ -39,9 +36,15 @@ describe("ERC20 Token", () => {
     expect(await token.symbol()).to.equal("REMI");
   });
 
-  it("Should return the correct supply", async () => {
+  it("Should return the correct total supply", async () => {
     expect(ethers.BigNumber.from(await token.totalSupply())).to.equal(
       ethers.BigNumber.from("10000000000000000000000000000")
     );
+  });
+
+  it("Should return the correct total supply at the deployers address", async () => {
+    expect(
+      ethers.BigNumber.from(await token.balanceOf(await deployer.getAddress()))
+    ).to.equal(ethers.BigNumber.from("10000000000000000000000000000"));
   });
 });
