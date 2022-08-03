@@ -33,7 +33,7 @@ const verifyOnEtherscan = async (
     await hre.run("verify:verify", {
       address: contractAddress,
       constructorArguments,
-      contract: "contracts/BillBuster.sol:BillBuster"
+      contract: "contracts/InvestorVesting.sol:InvestorVesting"
     });
   } catch (e) {
     console.error(e);

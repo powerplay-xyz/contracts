@@ -1,7 +1,8 @@
 {
   "kovan": {
     "BillBuster": "0xEf94f872f8f84Ad7C26215703c46365A76b39187",
-    "REMI": "0xd9BAcC5BccAd9A380001d41Cd234b4D5f33ece76"
+    "REMI": "0xd9BAcC5BccAd9A380001d41Cd234b4D5f33ece76",
+    "InvestorVesting": "0xaccdeE05295A272b1Aed66fE950f071A2d92c427"
   },
   "localhost": {}
 }

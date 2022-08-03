@@ -1,6 +1,6 @@
 import { ethers as tsEthers } from "ethers";
 import * as Token from "./Token";
-import * as BillBuster from "./BillBuster";
+import * as InvestorVesting from "./InvestorVesting";
 
 export interface DeploymentModule {
   contractNames: (...params: any) => string[];
@@ -13,6 +13,6 @@ export interface DeploymentModule {
   upgrade?: (deployer: tsEthers.Signer, addresses?: any) => void;
 }
 
-const modules: DeploymentModule[] = [BillBuster, Token];
+const modules: DeploymentModule[] = [InvestorVesting];
 
 export default modules;

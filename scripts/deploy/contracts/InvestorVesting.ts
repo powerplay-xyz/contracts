@@ -4,7 +4,9 @@ import { InvestorVesting } from "../../../build/typechain";
 export const contractNames = () => ["InvestorVesting"];
 
 export const constructorArguments = () => [
-  "0xd9BAcC5BccAd9A380001d41Cd234b4D5f33ece76"
+  "0xd9BAcC5BccAd9A380001d41Cd234b4D5f33ece76",
+  1659560482,
+  20
 ];
 
 export const deploy = async (deployer, setAddresses) => {
