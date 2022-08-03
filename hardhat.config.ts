@@ -40,6 +40,10 @@ export default {
     mainnet: {
       url: process.env.MAINNET_URL || defaultRpcUrl,
       accounts: [process.env.PRIVATE_KEY || defaultKey]
+    },
+    polygonMainnet: {
+      url: process.env.POLY_URL || defaultRpcUrl,
+      accounts: [process.env.PRIVATE_KEY || defaultKey]
     }
   },
   etherscan: {
