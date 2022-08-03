@@ -1,7 +1,6 @@
 ﻿import { ethers } from "hardhat";
 import { BigNumber, ethers as tsEthers } from "ethers";
 import { assert, expect } from "chai";
-import hre from "hardhat";
 import {
   BillBuster,
   BillBuster__factory,
@@ -9,7 +8,6 @@ import {
   REMI__factory
 } from "../build/typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signers";
-import { getRevertMessage } from "../scripts/utils";
 
 let billBuster: BillBuster;
 let remi: REMI;
@@ -17,10 +15,7 @@ let owner: SignerWithAddress;
 let user1: SignerWithAddress;
 let user2: SignerWithAddress;
 let user3: SignerWithAddress;
-let accounts: SignerWithAddress[];
 
-const TOKEN_COUNT = "10000000000"; //10 billion
-const TOTAL_SUPPLY = ethers.utils.parseEther(TOKEN_COUNT);
 const TAX_FEE = ethers.BigNumber.from("5");
 const TAX_FEE_DECIMALS = ethers.BigNumber.from("1");
 const TAX_ADDRESS = "0x470D968F0d27075F3Db0f28d2C2a5a6EEbaD9E65";
@@ -136,9 +131,9 @@ describe("Bill Buster withdrawals", () => {
     billBuster = await new BillBuster__factory(deployer).deploy(remi.address);
 
     [owner, user1, user2, user3] = await ethers.getSigners();
-    const amount = ethers.BigNumber.from("1000");
+    const amount = ethers.utils.parseEther("1000");
     const token1 = await remi.connect(owner);
-    await token1.transfer(user1.address, ethers.BigNumber.from("1001"));
+    await token1.transfer(user1.address, ethers.utils.parseEther("1001"));
 
     const token2 = await remi.connect(user1);
     await token2.approve(billBuster.address, amount);
@@ -151,34 +146,66 @@ describe("Bill Buster withdrawals", () => {
   it("Should not allow a withdrawal if the withdrawal amount is greater then held assests", async () => {
     const contract1 = await billBuster.connect(user2);
     await expect(
-      contract1.withdraw(ethers.BigNumber.from("1"))
+      contract1.withdraw(ethers.utils.parseEther("1"))
     ).to.be.revertedWith("Withdrawal amount exceeds held balance");
     const contract2 = await billBuster.connect(user1);
     await expect(
-      contract2.withdraw(ethers.BigNumber.from("1001"))
+      contract2.withdraw(ethers.utils.parseEther("1001"))
     ).to.be.revertedWith("Withdrawal amount exceeds held balance");
   });
 
-  it("Should allow a withdrawal if the withdrawal amount is less or equal too the held assests", async () => {
-    // With the default fee of 0.5% no tax will be applied to withdrawals under 1000 RETA due to the limitations of integer maths.
+  it("Should allow a withdrawal and apply tax if the withdrawal amount is less or equal too the held assests and waiveFees is false", async () => {
+    // With the default fee of 0.5% no tax will be applied to withdrawals under 1000 wei RETA due to the limitations of integer maths.
     const contract = await billBuster.connect(user1);
     const token = await remi.connect(user1);
-    const amount = ethers.BigNumber.from("1000");
-    const taxAmount = ethers.BigNumber.from("5");
 
-    const withdrawalRemainer = amount.sub(taxAmount).add(1);
+    const amount = ethers.utils.parseEther("100");
+    const taxAmount = ethers.utils.parseEther("0.5");
+
+    const withdrawalRemainer = amount
+      .sub(taxAmount)
+      .add(ethers.utils.parseEther("1"));
 
     await expect(contract.withdraw(amount))
       .to.emit(billBuster, "Withdraw")
       .withArgs(user1.address, amount);
 
     expect(await contract.getBalance(user1.address)).to.equal(
-      ethers.BigNumber.from("0")
+      ethers.utils.parseEther("900")
     );
     expect(await token.balanceOf(billBuster.address)).to.equal(
-      ethers.BigNumber.from("0")
+      ethers.utils.parseEther("900")
     );
     expect(await token.balanceOf(user1.address)).to.equal(withdrawalRemainer);
+    expect(await token.balanceOf(TAX_ADDRESS)).to.equal(taxAmount);
+  });
+
+  it("Should allow a withdrawal and NOT apply tax if the withdrawal amount is less or equal too the held assests and waiveFees is true", async () => {
+    const contractOwened = await billBuster.connect(owner);
+
+    await expect(contractOwened.toggleTransactionFees())
+      .to.emit(billBuster, "ToggleWaiveFees")
+      .withArgs(true);
+    // With the default fee of 0.5% no tax will be applied to withdrawals under 1000 wei RETA due to the limitations of integer maths.
+    const contract = await billBuster.connect(user1);
+    const token = await remi.connect(user1);
+
+    const amount = ethers.utils.parseEther("100");
+    const taxAmount = ethers.utils.parseEther("0.5");
+
+    const withdrawen = amount.add(await token.balanceOf(user1.address));
+
+    await expect(contract.withdraw(amount))
+      .to.emit(billBuster, "Withdraw")
+      .withArgs(user1.address, amount);
+
+    expect(await contract.getBalance(user1.address)).to.equal(
+      ethers.utils.parseEther("800")
+    );
+    expect(await token.balanceOf(billBuster.address)).to.equal(
+      ethers.utils.parseEther("800")
+    );
+    expect(await token.balanceOf(user1.address)).to.equal(withdrawen);
     expect(await token.balanceOf(TAX_ADDRESS)).to.equal(taxAmount);
   });
 });
