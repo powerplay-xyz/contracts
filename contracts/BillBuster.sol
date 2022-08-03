@@ -104,7 +104,6 @@ contract BillBuster is Ownable {
 
   /// @notice Deposit tokens to the contract
   function deposit(uint256 _amount) public {
-    require(ERC20(token).allowance(msg.sender, address(this)) >= _amount, "Not enough allowance");
     _totalStaked += _amount;
     _balances[msg.sender] += _amount;
     ERC20(token).safeTransferFrom(msg.sender, address(this), _amount);
