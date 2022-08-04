@@ -29,7 +29,6 @@ interface IInvestor {
     function claim() external;
 }
 
-// Client's requirement not yet finalized, still waiting.
 contract InvestorVesting is IInvestor, Ownable {
     using SafeERC20 for ERC20;
 
@@ -38,9 +37,9 @@ contract InvestorVesting is IInvestor, Ownable {
     uint256 public totalClaimed;
     uint256 public totalVestingAmount;
     //Maximum number of vesting details
-    uint256 public maxVestingDetailArray;
+    uint256 private constant maxVestingDetailArray = 20;
 
-    address public operator;
+    address private operator;
 
     /// @dev event for set start date
     /// @param date The date of the start date
@@ -64,7 +63,7 @@ contract InvestorVesting is IInvestor, Ownable {
         _;
     }
 
-    constructor(address _token, uint256 _startDate, uint256 _maxVestingDetailArray) {
+    constructor(address _token, uint256 _startDate) {
         require(
             _startDate >= block.timestamp,
             "Start date cannot be before the deployment date"
@@ -72,7 +71,6 @@ contract InvestorVesting is IInvestor, Ownable {
         require(_token != address(0), "Address cannot be zero");
         startDate = _startDate;
         token = _token;
-        maxVestingDetailArray = _maxVestingDetailArray;
         operator = msg.sender;
 
         //emit event
@@ -228,6 +226,17 @@ contract InvestorVesting is IInvestor, Ownable {
         ERC20(token).safeTransfer(beneficiary, amountToClaim);
 
         emit Claimed(beneficiary, amountToClaim);
+    }
+
+    /**
+     * @dev Get beneficiary's vesting detail
+     */
+    function getOperator()
+        external
+        view
+        returns (address)
+    {
+        return operator;
     }
 
     /**

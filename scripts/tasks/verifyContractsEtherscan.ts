@@ -24,7 +24,7 @@ task("verify-contracts-etherscan").setAction(async (args, hre) => {
   }
 });
 
-const verifyOnEtherscan = async (
+export const verifyOnEtherscan = async (
   contractAddress,
   constructorArguments = [],
   hre

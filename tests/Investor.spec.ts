@@ -30,8 +30,7 @@ describe("Investor Vesting", () => {
 
     vesting = await new InvestorVesting__factory(deployer).deploy(
       token.address,
-      startTime,
-      20
+      startTime
     );
 
     //transfer tokens into vesting contract
@@ -40,7 +39,7 @@ describe("Investor Vesting", () => {
 
   it("Should not allow start date before deployment date", async () => {
     await expect(
-      new InvestorVesting__factory(deployer).deploy(token.address, 0, 20)
+      new InvestorVesting__factory(deployer).deploy(token.address, 0)
     ).to.revertedWith("Start date cannot be before the deployment date");
   });
 
@@ -51,7 +50,7 @@ describe("Investor Vesting", () => {
     startTime = latestBlock.timestamp + 1000;
 
     await expect(
-      new InvestorVesting__factory(deployer).deploy(tokenAddress, startTime, 20)
+      new InvestorVesting__factory(deployer).deploy(tokenAddress, startTime)
     ).to.revertedWith("Address cannot be zero");
   });
 
@@ -63,7 +62,7 @@ describe("Investor Vesting", () => {
 
     expect(balance).to.equal(ethers.BigNumber.from("100000"));
 
-    const operatorAddress = await vesting.operator();
+    const operatorAddress = await vesting.getOperator();
     expect(operatorAddress).to.equal(await deployer.getAddress());
   });
 
@@ -85,7 +84,7 @@ describe("Investor Vesting", () => {
     ).to.be.revertedWith("Ownable: caller is not the owner");
 
     await vesting.setOperator(newOperatorAddress);
-    expect(await vesting.operator()).to.equal(newOperatorAddress);
+    expect(await vesting.getOperator()).to.equal(newOperatorAddress);
   });
 
   it("Should allow operator to set vesting", async () => {
