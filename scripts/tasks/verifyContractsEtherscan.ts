@@ -24,7 +24,7 @@ task("verify-contracts-etherscan").setAction(async (args, hre) => {
   }
 });
 
-const verifyOnEtherscan = async (
+export const verifyOnEtherscan = async (
   contractAddress,
   constructorArguments = [],
   hre
@@ -33,7 +33,7 @@ const verifyOnEtherscan = async (
     await hre.run("verify:verify", {
       address: contractAddress,
       constructorArguments,
-      contract: "contracts/REMI.sol:REMI"
+      contract: "contracts/InvestorVesting.sol:InvestorVesting"
     });
   } catch (e) {
     console.error(e);

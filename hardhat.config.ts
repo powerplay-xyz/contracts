@@ -44,6 +44,10 @@ export default {
     polygonMainnet: {
       url: process.env.POLY_URL || defaultRpcUrl,
       accounts: [process.env.PRIVATE_KEY || defaultKey]
+    },
+    goerli: {
+      url: process.env.GOERLI_URL || defaultRpcUrl,
+      accounts: [process.env.PRIVATE_KEY || defaultKey]
     }
   },
   etherscan: {
