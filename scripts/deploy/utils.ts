@@ -12,7 +12,9 @@ export const deployContract = async (
   const Contract = (await ethers.getContractFactory(contractName)).connect(
     signer
   );
-  const contract = await Contract.deploy(...constructorArguments);
+  const contract = await Contract.deploy(...constructorArguments, {
+    gasLimit: 12000000
+  });
   await contract.deployTransaction.wait(waitCount);
   return contract;
 };
@@ -113,3 +115,7 @@ export const getSignerForDeployer = async (): Promise<tsEthers.Signer> => {
   }
   return deployer;
 };
+
+export function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
