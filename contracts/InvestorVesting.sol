@@ -132,7 +132,7 @@ contract InvestorVesting is IInvestor, Ownable {
                     "Initial claimed is not valid"
                 );
             } else {
-                //New beneficiary's initial claimed must be false
+                //New beneficiary's initial claimed must be true if there is no initialAmount
                 require(
                     _vestingDetails[i].initialClaimed == true,
                     "Initial claimed is not valid"
