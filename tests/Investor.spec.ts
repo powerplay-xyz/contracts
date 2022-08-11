@@ -215,10 +215,6 @@ describe("Investor Vesting", () => {
   });
 
   it("Should allow operator to add vesting after claim start date", async () => {
-    // await hre.network.provider.request({
-    //   method: "evm_setNextBlockTimestamp",
-    //   params: [startTime + 7200]
-    // });
     const user3Address = await user3.getAddress();
     const user4Address = await user4.getAddress();
     const userVestingList = [
@@ -316,6 +312,22 @@ describe("Investor Vesting", () => {
     const userBalanceAfter = await token.balanceOf(await user.getAddress());
 
     expect(userBalanceAfter).to.equal(ethers.BigNumber.from("10000"));
+
+
+    await vesting.connect(user4).claim();
+    const user4BalanceAfter = await token.balanceOf(await user4.getAddress());
+
+    expect(user4BalanceAfter).to.equal(ethers.BigNumber.from("82"));
+
+    await hre.network.provider.request({
+      method: "evm_setNextBlockTimestamp",
+      params: [startTime + 31556926 + 41556926]
+    });
+
+    await vesting.connect(user4).claim();
+    const user4BalanceAfter2 = await token.balanceOf(await user4.getAddress());
+
+    expect(user4BalanceAfter2).to.equal(ethers.BigNumber.from("1010"));
   });
 
   it("Should not allow more tokens than are in the contract", async () => {
