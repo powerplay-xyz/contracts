@@ -14,12 +14,13 @@ let deployer: tsEthers.Signer;
 let user: tsEthers.Signer;
 let user2: tsEthers.Signer;
 let user3: tsEthers.Signer;
+let user4: tsEthers.Signer;
 let operator: tsEthers.Signer;
 let startTime = 0;
 
 describe("Investor Vesting", () => {
   before(async () => {
-    [deployer, user, user2, user3, operator] = await ethers.getSigners();
+    [deployer, user, user2, user3, operator, user4] = await ethers.getSigners();
 
     token = await new REMI__factory(deployer).deploy();
 
@@ -171,12 +172,51 @@ describe("Investor Vesting", () => {
     );
   });
 
-  it("Should allow operator to add vesting after claim start date", async () => {
+  it("Should not allow set vesting if initialAmount and initialClaimed do not match", async () => {
     await hre.network.provider.request({
       method: "evm_setNextBlockTimestamp",
       params: [startTime + 7200]
     });
     const user3Address = await user3.getAddress();
+    const user4Address = await user4.getAddress();
+    const userVestingList1 = [
+      {
+        beneficiary: user3Address,
+        vestingAmount: ethers.BigNumber.from("1000"),
+        duration: 31556926, //12 months
+        claimedAmount: 0,
+        lastClaimedTime: 0,
+        initialAmount: ethers.BigNumber.from("100"),
+        initialClaimed: true,
+        claimStartTime: startTime + 31556926 // 12 months
+      }
+    ];
+
+    await expect(
+      vesting.connect(operator).setVesting(userVestingList1)
+    ).to.revertedWith("Initial claimed is not valid");
+
+    const userVestingList2 = [
+      {
+        beneficiary: user4Address,
+        vestingAmount: ethers.BigNumber.from("1010"),
+        duration: 31556926, //12 months
+        claimedAmount: 0,
+        lastClaimedTime: 0,
+        initialAmount: ethers.BigNumber.from("0"),
+        initialClaimed: false,
+        claimStartTime: startTime + 31556926 // 12 months
+      }
+    ];
+
+    await expect(
+      vesting.connect(operator).setVesting(userVestingList2)
+    ).to.revertedWith("Initial claimed is not valid");
+  });
+
+  it("Should allow operator to add vesting after claim start date", async () => {
+    const user3Address = await user3.getAddress();
+    const user4Address = await user4.getAddress();
     const userVestingList = [
       {
         beneficiary: user3Address,
@@ -186,6 +226,16 @@ describe("Investor Vesting", () => {
         lastClaimedTime: 0,
         initialAmount: ethers.BigNumber.from("100"),
         initialClaimed: false,
+        claimStartTime: startTime + 31556926 // 12 months
+      },
+      {
+        beneficiary: user4Address,
+        vestingAmount: ethers.BigNumber.from("1010"),
+        duration: 31556926, //12 months
+        claimedAmount: 0,
+        lastClaimedTime: 0,
+        initialAmount: ethers.BigNumber.from("0"),
+        initialClaimed: true,
         claimStartTime: startTime + 31556926 // 12 months
       }
     ];
@@ -197,6 +247,12 @@ describe("Investor Vesting", () => {
       .getBeneficiaryVesting(user3Address);
     expect(user3Vesting.beneficiary).to.equal(user3Address);
     expect(user3Vesting.vestingAmount).to.equal(ethers.BigNumber.from("1000"));
+
+    const user4Vesting = await vesting
+      .connect(user4)
+      .getBeneficiaryVesting(user4Address);
+    expect(user4Vesting.beneficiary).to.equal(user4Address);
+    expect(user4Vesting.vestingAmount).to.equal(ethers.BigNumber.from("1010"));
   });
 
   it("Should allow user to claim initial amount after claim started", async () => {
@@ -256,6 +312,22 @@ describe("Investor Vesting", () => {
     const userBalanceAfter = await token.balanceOf(await user.getAddress());
 
     expect(userBalanceAfter).to.equal(ethers.BigNumber.from("10000"));
+
+
+    await vesting.connect(user4).claim();
+    const user4BalanceAfter = await token.balanceOf(await user4.getAddress());
+
+    expect(user4BalanceAfter).to.equal(ethers.BigNumber.from("82"));
+
+    await hre.network.provider.request({
+      method: "evm_setNextBlockTimestamp",
+      params: [startTime + 31556926 + 41556926]
+    });
+
+    await vesting.connect(user4).claim();
+    const user4BalanceAfter2 = await token.balanceOf(await user4.getAddress());
+
+    expect(user4BalanceAfter2).to.equal(ethers.BigNumber.from("1010"));
   });
 
   it("Should not allow more tokens than are in the contract", async () => {
