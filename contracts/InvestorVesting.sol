@@ -125,19 +125,11 @@ contract InvestorVesting is IInvestor, Ownable {
                 _vestingDetails[i].lastClaimedTime == 0,
                 "Last claimed time is not valid"
             );
-            if (_vestingDetails[i].initialAmount > 0) {
-                //New beneficiary's initial claimed must be false
-                require(
-                    _vestingDetails[i].initialClaimed == false,
-                    "Initial claimed is not valid"
-                );
-            } else {
-                //New beneficiary's initial claimed must be true if there is no initialAmount
-                require(
-                    _vestingDetails[i].initialClaimed == true,
-                    "Initial claimed is not valid"
+            require(
+                (_vestingDetails[i].initialAmount > 0 && !_vestingDetails[i].initialClaimed)
+                    || (_vestingDetails[i].initialAmount == 0 && _vestingDetails[i].initialClaimed),
+                "Initial claimed is not valid"
             );
-            }
             //New beneficiary's claim start time must be not be before start date
             require(
                 _vestingDetails[i].claimStartTime >= startDate,
