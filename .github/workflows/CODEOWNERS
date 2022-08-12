@@ -1,0 +1,11 @@
+##########################################
+
+# code ownership
+
+##########################################
+
+# default ownership: default owners for everything in the repo (Unless a later match takes precedence)
+
+# @OptimusOpus and @xiangzhe0812 will be requested for review when someone opens a pull request.
+
+-       @OptimusOpus @xiangzhe0812 @RalphLavelle
