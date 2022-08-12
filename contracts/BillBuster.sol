@@ -104,6 +104,7 @@ contract BillBuster is Ownable {
 
   /// @notice Deposit tokens to the contract
   function deposit(uint256 _amount) public {
+    require(_amount > 0, "Amount must be greater than 0");
     _totalStaked += _amount;
     _balances[msg.sender] += _amount;
     ERC20(token).safeTransferFrom(msg.sender, address(this), _amount);
@@ -112,6 +113,7 @@ contract BillBuster is Ownable {
 
   /// @notice Withdraw tokens from the contract
   function withdraw(uint256 _amount) public {
+    require(_amount > 0, "Amount must be greater than 0");
     uint256 _balance = _balances[msg.sender];
     require( _balance >= _amount, "Withdrawal amount exceeds held balance");
     _totalStaked -= _amount;
