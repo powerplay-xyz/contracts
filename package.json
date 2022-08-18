@@ -19,7 +19,7 @@
     "@chainlink/contracts": "^0.1.6",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@openzeppelin/contracts": "^4.4.2",
+    "@openzeppelin/contracts": "^4.7.3",
     "@typechain/ethers-v5": "^8.0.5",
     "@typechain/hardhat": "^3.1.0",
     "chai": "^4.3.4",
@@ -47,10 +47,10 @@
     "@types/dotenv": "^8.2.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^15.12.4",
-    "erc721a": "^3.2.0",
-    "eslint": "^8.13.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "erc721a": "^3.2.0",
+    "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.2",
@@ -61,8 +61,8 @@
   },
   "lint-staged": {
     "*.ts": [
-        "eslint",
-        "prettier --write"
+      "eslint",
+      "prettier --write"
     ]
   }
 }
