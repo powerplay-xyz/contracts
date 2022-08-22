@@ -91,12 +91,12 @@ describe("Bill Buster deposits", () => {
     const contract = await billBuster.connect(user1);
     await expect(
       contract.deposit(ethers.BigNumber.from("1"))
-    ).to.be.revertedWith("ERC20: transfer amount exceeds allowance");
+    ).to.be.revertedWith("ERC20: insufficient allowance");
     const token = await remi.connect(user1);
     await token.approve(billBuster.address, ethers.BigNumber.from("100"));
     await expect(
       contract.deposit(ethers.BigNumber.from("101"))
-    ).to.be.revertedWith("ERC20: transfer amount exceeds allowance");
+    ).to.be.revertedWith("ERC20: insufficient allowance");
   });
 
   it("Should allow a deposit if there is enough allowance", async () => {
