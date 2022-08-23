@@ -1,12 +1,13 @@
 import { deployContract, sleep } from "../utils";
 import { BillBuster } from "../../../build/typechain";
 import { verifyOnEtherscan } from "../../tasks/verifyContractsEtherscan";
+import contracts from "../../../contracts.json";
 import hre, { ethers } from "hardhat";
 
 export const contractNames = () => ["BillBuster"];
 
 export const constructorArguments = () => [
-  "0xd9BAcC5BccAd9A380001d41Cd234b4D5f33ece76"
+  contracts[process.env.HARDHAT_NETWORK?.toLowerCase()].REMI
 ];
 
 export const deploy = async (deployer, setAddresses) => {
