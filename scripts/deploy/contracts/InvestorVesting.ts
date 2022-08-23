@@ -1,12 +1,13 @@
 import { deployContract, sleep } from "../utils";
 import { InvestorVesting } from "../../../build/typechain";
 import { verifyOnEtherscan } from "../../tasks/verifyContractsEtherscan";
+import contracts from "../../../contracts.json";
 import hre, { ethers } from "hardhat";
 
 export const contractNames = () => ["InvestorVesting"];
 
-const tokenAddress = "0xd9BAcC5BccAd9A380001d41Cd234b4D5f33ece76";
-const startDate = 1660201727;
+const tokenAddress = contracts[process.env.HARDHAT_NETWORK?.toLowerCase()].REMI;
+const startDate = 1660274000;
 
 const vestingSeed = [
   {
@@ -45,15 +46,17 @@ export const constructorArguments = () => [tokenAddress, startDate];
 
 export const deploy = async (deployer, setAddresses) => {
   console.log("deploying InvestorVesting");
+  const waitCount = 4;
   const investorVesting: InvestorVesting = (await deployContract(
     "InvestorVesting",
     constructorArguments(),
     deployer,
-    6
+    waitCount
   )) as InvestorVesting;
   console.log(`deployed InvestorVesting to address ${investorVesting.address}`);
   setAddresses({ InvestorVesting: investorVesting.address });
   console.log("Verifying InvestorVesting on Etherscan");
+  await sleep(10000);
   await verifyOnEtherscan(investorVesting.address, constructorArguments(), hre);
   console.log("Setting up vesting seeds");
   //Set vesting seed after deploy the contract
