@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 struct VestingDetail {
-    //Vestor address
+    // Vestor address
     address beneficiary;
     // Amount to be vested.
     uint256 vestingAmount;
@@ -40,6 +40,10 @@ contract InvestorVesting is IInvestor, Ownable {
     uint256 private constant maxVestingDetailArray = 20;
 
     address private operator;
+
+    /// @dev event for setting operator
+    /// @param operator The address of the operator
+    event SetOperator(address operator);
 
     /// @dev event for set start date
     /// @param date The date of the start date
@@ -254,6 +258,7 @@ contract InvestorVesting is IInvestor, Ownable {
         require(_operator != msg.sender, "Cannot set self as operator");
         require(_operator != operator, "Already set");
         operator = _operator;
+        emit SetOperator(_operator);
     }
 
     /**
