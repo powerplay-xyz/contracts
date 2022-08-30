@@ -35,6 +35,7 @@ contract BillBuster is Ownable {
   event Withdraw(address indexed to, uint256 value);
 
   constructor(address _token) {
+    require(_token != address(0), "Address cannot be zero");
     token = _token;
     // set the Tax fee to be 0.5%
     setTaxFee(5, 1);
