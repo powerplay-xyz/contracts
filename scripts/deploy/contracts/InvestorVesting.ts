@@ -83,7 +83,7 @@ const vestingSeed = [
     claimStartTime: startDate + 31536000
   },
   {
-    beneficiary: "Dltx wallet",
+    beneficiary: "0xfa0B65413E3E81FAF7321f85b2AfdD0EffF13Ef5",
     vestingAmount: ethers.BigNumber.from("350000000"),
     duration: 63072000,
     claimedAmount: 0,
