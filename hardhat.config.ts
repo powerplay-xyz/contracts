@@ -45,6 +45,10 @@ export default {
       url: process.env.POLY_URL || defaultRpcUrl,
       accounts: [process.env.PRIVATE_KEY || defaultKey]
     },
+    polygonMumbai: {
+      url: process.env.MUMBAI_URL || defaultRpcUrl,
+      accounts: [process.env.PRIVATE_KEY || defaultKey]
+    },
     goerli: {
       url: process.env.GOERLI_URL || defaultRpcUrl,
       accounts: [process.env.PRIVATE_KEY || defaultKey]
@@ -52,7 +56,7 @@ export default {
   },
   etherscan: {
     // Obtain etherscan API key at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_KEY
+    apiKey: process.env.POLYGONSCAN_API_KEY
   },
   solidity: {
     compilers: [

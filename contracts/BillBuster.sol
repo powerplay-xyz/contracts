@@ -16,7 +16,7 @@ contract BillBuster is Ownable {
 
   uint256 private _totalStaked;
 
-  address private taxAddress = address(0x470D968F0d27075F3Db0f28d2C2a5a6EEbaD9E65);
+  address private taxAddress = address(0xf24E97Fa90B2e81DA88D355A2C12615f90e045AF);
 
   // Number of tokens in the contract per address
   mapping(address => uint256) private _balances;

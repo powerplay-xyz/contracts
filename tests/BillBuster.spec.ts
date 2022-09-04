@@ -18,7 +18,7 @@ let user3: SignerWithAddress;
 
 const TAX_FEE = ethers.BigNumber.from("5");
 const TAX_FEE_DECIMALS = ethers.BigNumber.from("1");
-const TAX_ADDRESS = "0x470D968F0d27075F3Db0f28d2C2a5a6EEbaD9E65";
+const TAX_ADDRESS = "0xf24E97Fa90B2e81DA88D355A2C12615f90e045AF";
 
 describe("Bill Buster", () => {
   before(async () => {
