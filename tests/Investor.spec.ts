@@ -34,7 +34,7 @@ describe("Investor Vesting", () => {
       startTime
     );
 
-    //transfer tokens into vesting contract
+    // transfer tokens into vesting contract
     await token.transfer(vesting.address, ethers.BigNumber.from("100000"));
   });
 

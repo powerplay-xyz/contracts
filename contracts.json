@@ -6,5 +6,20 @@
   },
   "localhost": {
     "InvestorVesting": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  },
+  "polygonMumbai": {
+    "REMI": "0xA507Ee4410c8D5888c3bf29F5c178b07A62d9201",
+    "InvestorVesting": "0xC620E8AA8B5f24a860c8e49f739c5F6259C7515B",
+    "BillBuster": "0xcE4f5CCB822c178a03F16D9Ce7ADCcE5B0f54B69"
+  },
+  "polygonmumbai": {
+    "BillBuster": "0xcE4f5CCB822c178a03F16D9Ce7ADCcE5B0f54B69",
+    "InvestorVesting": "0x2135a034648663e900feEf90768577A1d01F29C5",
+    "token": "0xA507Ee4410c8D5888c3bf29F5c178b07A62d9201"
+  },
+  "polygonmainnet": {
+    "REMI": "0xbB6129911d3bBdAdB447241d433b4eD529aeBBd8",
+    "BillBuster": "0x28B239eD88b441C81da2A07E42d7b7B32434c5e6",
+    "InvestorVesting": "0xbd95588a83F298026ae949c641dc15abF489df3f"
   }
 }

@@ -7,7 +7,7 @@ import hre, { ethers } from "hardhat";
 export const contractNames = () => ["BillBuster"];
 
 export const constructorArguments = () => [
-  contracts[process.env.HARDHAT_NETWORK?.toLowerCase()].REMI
+  contracts[process.env.HARDHAT_NETWORK].REMI
 ];
 
 export const deploy = async (deployer, setAddresses) => {
@@ -16,7 +16,7 @@ export const deploy = async (deployer, setAddresses) => {
     "BillBuster",
     constructorArguments(),
     deployer,
-    3
+    4
   )) as BillBuster;
   console.log(`deployed BillBuster to address ${bb.address}`);
   setAddresses({ BillBuster: bb.address });
